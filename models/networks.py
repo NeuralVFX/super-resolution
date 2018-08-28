@@ -36,7 +36,7 @@ def up_res(nf):
 
 class SrResNet(nn.Module):
     # Generator with which RNN for up-sampling
-    def __init__(self, nf, upres_count):
+    def __init__(self, nf, upres_count,switch_epoch = 5):
         super().__init__()
         self.upres_count = upres_count
         features = [conv_block(3, nf)]
@@ -46,8 +46,12 @@ class SrResNet(nn.Module):
         self.upsample = nn.ModuleList([up_res(nf) for a in range(self.upres_count)])
         self.out = nn.Sequential(*[nn.BatchNorm2d(nf), conv_block(nf, 3)])
         self.rnn = True
+        self.first_run = True
+        self.switch_epoch = switch_epoch
 
-    def forward(self, x):
+    def forward(self, x, epoch):
+        self.check_rnn_status(epoch)
+
         x = self.res(x)
         if self.rnn:
             for i in range(self.upres_count):
@@ -58,21 +62,28 @@ class SrResNet(nn.Module):
         x = self.out(x)
         return x
 
+    def check_rnn_status(self, epoch):
+        # check if RNN must be on
+        if self.first_run:
+            if epoch > self.switch_epoch:
+                print("Switching RNN Off")
+                self.rnn = False
+        if self.rnn:
+            if epoch == self.switch_epoch:
+                self.rnn_switch(False)
+
     def rnn_switch(self, rnn_on):
         # Switch which turns off RNN, and copies trained weights into separate trainable layers for fine tuning
         if rnn_on:
             self.rnn = True
         else:
             self.rnn = False
-            print("Switching RNN Off")
+            print("Switching RNN Off, Copying Weights")
             for i in range(self.upres_count):
                 weight = self.upsample[0][0][0].weight.clone()
                 self.upsample[i][0][0].weight = nn.Parameter(weight)
 
 
-############################################################################
-# VGG Net
-############################################################################
 
 
 def make_vgg():

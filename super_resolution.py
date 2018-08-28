@@ -91,7 +91,9 @@ class SuperResolution:
 
         print(f'Data Loaders Initialized,  Data Len:{self.train_data.__len__()}')
         # Setup models
-        self.model_dict['G'] = n.SrResNet(params["gen_filters"], params["zoom_count"])
+        self.model_dict['G'] = n.SrResNet(params["gen_filters"],
+                                          params["zoom_count"],
+                                          switch_epoch = params["rnn_switch_epoch"])
 
         self.weights_init = helper.WeightsInit(params["gen_filters"]*4)
         for i in self.model_dict.keys():
@@ -142,11 +144,6 @@ class SuperResolution:
         state = torch.load(filepath)
         self.current_iter = state['iter'] + 1
         self.current_epoch = state['epoch'] + 1
-
-        # Recover proper RNN state
-        if state["epoch"] >= self.params["switch_epoch"]:
-            self.model_dict["G"].rnn = False
-            print("Turning Off RNN")
 
         for i in self.model_dict.keys():
             self.model_dict[i].load_state_dict(state['models'][i])
@@ -205,7 +202,7 @@ class SuperResolution:
         # train function for generator
         self.opt_dict["G"].zero_grad()
 
-        high_fake = self.model_dict["G"](low_res)
+        high_fake = self.model_dict["G"](low_res,self.current_epoch)
         ct_losses, l1_losses = self.ct_loss(high_fake, high_res)
 
         self.loss_batch_dict['L1_Loss'] = sum(l1_losses) / self.params['batch_size']
@@ -219,7 +216,7 @@ class SuperResolution:
 
     def test_gen(self, low_res, high_res):
         # test function for generator
-        high_fake = self.model_dict["G"](low_res)
+        high_fake = self.model_dict["G"](low_res,self.current_epoch)
         ct_losses, l1_losses = self.ct_loss(high_fake, high_res)
 
         self.loss_batch_dict_test['L1_Loss'] = sum(l1_losses) / self.params['batch_size']
