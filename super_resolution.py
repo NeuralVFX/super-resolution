@@ -93,8 +93,9 @@ class SuperResolution:
         # Setup models
         self.model_dict['G'] = n.SrResNet(params["gen_filters"], params["zoom_count"])
 
+        self.weights_init = helper.WeightsInit()
         for i in self.model_dict.keys():
-            self.model_dict[i].apply(helper.weights_init_normal)
+            self.model_dict[i].apply(self.weights_init)
             self.model_dict[i].cuda()
             self.model_dict[i].train()
 

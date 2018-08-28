@@ -24,19 +24,23 @@ def icnr(x, scale=2, init=nn.init.kaiming_normal):
     return full_kernel
 
 
-def weights_init_normal(m):
-    # Set initial state of weights
-    classname = m.__class__.__name__
-    if 'ConvTrans' == classname:
-        pass
-    elif 'Conv2d' in classname or 'Linear' in classname or 'ConvTrans' in classname:
-        nn.init.normal_(m.weight.data, 0, .02)
+class WeightsInit:
+    def __init__(self,channels):
+        self.channels = channels
 
-    if classname == 'Conv2d':
-        if m.out_channels == 256:
-            kern = icnr(m.weight)
-            m.weight.data.copy_(kern)
-            print(f'Init with ICNR:{classname}')
+    def __call__(self,m):
+        # Set initial state of weights
+        classname = m.__class__.__name__
+        if 'ConvTrans' == classname:
+            pass
+        elif 'Conv2d' in classname or 'Linear' in classname or 'ConvTrans' in classname:
+            nn.init.normal_(m.weight.data, 0, .02)
+
+        if classname == 'Conv2d':
+            if m.out_channels == self.channels:
+                kern = icnr(m.weight)
+                m.weight.data.copy_(kern)
+                print(f'Init with ICNR:{classname}')
 
 
 def mft(tensor):
