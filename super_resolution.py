@@ -45,7 +45,7 @@ class SuperResolution:
                   'ids': [16, 26],
                   'grow_count': 3,
                   'grow_every':5,
-                  'switch_epoch':4,
+                  'rnn_switch_epoch':4,
                   'save_img_every':1,
                   'drop_start': 30,
                   'lr_drop_every': 5,
@@ -241,33 +241,42 @@ class SuperResolution:
             [self.loss_epoch_dict_test[loss].append(self.loss_batch_dict_test[loss].item()) for loss in self.losses]
         [self.train_hist_dict_test[loss].append(helper.mft(self.loss_epoch_dict_test[loss])) for loss in self.losses]
 
+    def train_loop(self):
+        # Train on train set
+        self.model_dict["G"].train()
+
+        for loss in self.losses:
+            self.loss_epoch_dict[loss] = []
+
+        lr_mult = self.lr_lookup()
+        self.opt_dict["G"].param_groups[0]['lr'] = lr_mult * self.params['lr']
+        print(f"Sched Sched Iter:{self.current_iter}, Sched Epoch:{self.current_epoch}")
+        [print(f"Learning Rate({opt}): {self.opt_dict[opt].param_groups[0]['lr']}") for opt in self.opt_dict.keys()]
+        for low_res, high_res in tqdm(self.train_loader):
+            low_res = Variable(low_res.cuda())
+            high_res = Variable(high_res.cuda())
+
+            # TRAIN GENERATOR
+            l1_losses, content_losses = self.train_gen(low_res, high_res)
+
+            # append all losses in loss dict
+            [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].item()) for loss in self.losses]
+            self.current_iter += 1
+        [self.train_hist_dict[loss].append(helper.mft(self.loss_epoch_dict[loss])) for loss in self.losses]
+
+
+
     def train(self):
         # Train following learning rate schedule
         params = self.params
         while self.current_epoch < params["train_epoch"]:
-            # clear last epochs losses
-            for loss in self.losses:
-                self.loss_epoch_dict[loss] = []
-
-            lr_mult = self.lr_lookup()
-            self.opt_dict["G"].param_groups[0]['lr'] = lr_mult * params['lr']
-
             epoch_start_time = time.time()
-            num_iter = 0
 
-            print(f"Sched Sched Iter:{self.current_iter}, Sched Epoch:{self.current_epoch}")
-            [print(f"Learning Rate({opt}): {self.opt_dict[opt].param_groups[0]['lr']}") for opt in self.opt_dict.keys()]
-            for low_res, high_res in tqdm(self.train_loader):
-                low_res = Variable(low_res.cuda())
-                high_res = Variable(high_res.cuda())
+            # TRAIN LOOP
+            self.train_loop()
 
-                # TRAIN GENERATOR
-                l1_losses, content_losses = self.train_gen(low_res, high_res)
-
-                # append all losses in loss dict
-                [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].item()) for loss in self.losses]
-                self.current_iter += 1
-                num_iter += 1
+            # TEST LOOP
+            self.test_loop()
 
             # generate test images and save to disk
             if self.current_epoch % params["save_img_every"] == 0:
@@ -276,21 +285,19 @@ class SuperResolution:
                                  self.test_loader,
                                  self.model_dict['G'],
                                  save=f'output/{params["save_root"]}_val_{self.current_epoch}.jpg')
-
-            # run validation set loop to get losses
-            self.test_loop()
+            # save
             if self.current_epoch % params["save_every"] == 0:
                 save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
                 tqdm.write(save_str)
 
-            self.current_epoch += 1
+
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
             print(f'Epoch Training Training Time: {per_epoch_ptime}')
             [print(f'Train {loss}: {helper.mft(self.loss_epoch_dict[loss])}') for loss in self.losses]
             [print(f'Val {loss}: {helper.mft(self.loss_epoch_dict_test[loss])}') for loss in self.losses]
             print('\n')
-            [self.train_hist_dict[loss].append(helper.mft(self.loss_epoch_dict[loss])) for loss in self.losses]
+            self.current_epoch += 1
 
         self.display_history()
         print('Hit End of Learning Schedule!')
