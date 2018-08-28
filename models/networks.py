@@ -36,7 +36,7 @@ def up_res(nf):
 
 class SrResNet(nn.Module):
     # Generator with which RNN for up-sampling
-    def __init__(self, nf, upres_count,switch_epoch = 5):
+    def __init__(self, nf, upres_count, switch_epoch=5):
         super().__init__()
         self.upres_count = upres_count
         features = [conv_block(3, nf)]
@@ -49,7 +49,7 @@ class SrResNet(nn.Module):
         self.first_run = True
         self.switch_epoch = switch_epoch
 
-    def forward(self, x, epoch = 0):
+    def forward(self, x, epoch=0):
         self.check_rnn_status(epoch)
 
         x = self.res(x)
@@ -82,8 +82,6 @@ class SrResNet(nn.Module):
             for i in range(self.upres_count):
                 weight = self.upsample[0][0][0].weight.clone()
                 self.upsample[i][0][0].weight = nn.Parameter(weight)
-
-
 
 
 def make_vgg():

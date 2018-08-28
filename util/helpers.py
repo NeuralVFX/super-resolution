@@ -25,10 +25,10 @@ def icnr(x, scale=2, init=nn.init.kaiming_normal):
 
 
 class WeightsInit:
-    def __init__(self,channels):
+    def __init__(self, channels):
         self.channels = channels
 
-    def __call__(self,m):
+    def __call__(self, m):
         # Set initial state of weights
         classname = m.__class__.__name__
         if 'ConvTrans' == classname:

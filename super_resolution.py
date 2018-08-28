@@ -32,7 +32,6 @@ class SuperResolution:
                   'lr':1e-4,
                   'beta1': .5,
                   'beta2': .999,
-                  'in_channels': 3,
                   'gen_filters': 64,
                   'content_weight': .5,
                   'l1_weight':  .1,
@@ -88,12 +87,12 @@ class SuperResolution:
         self.data_len = self.train_data.__len__()
         self.test_data = copy.deepcopy(self.train_data)
         self.test_data.train = False
-
         print(f'Data Loaders Initialized,  Data Len:{self.train_data.__len__()}')
+
         # Setup models
         self.model_dict['G'] = n.SrResNet(params["gen_filters"],
                                           params["zoom_count"],
-                                          switch_epoch = params["rnn_switch_epoch"])
+                                          switch_epoch=params["rnn_switch_epoch"])
 
         self.weights_init = helper.WeightsInit(params["gen_filters"]*4)
         for i in self.model_dict.keys():
@@ -202,7 +201,7 @@ class SuperResolution:
         # train function for generator
         self.opt_dict["G"].zero_grad()
 
-        high_fake = self.model_dict["G"](low_res,self.current_epoch)
+        high_fake = self.model_dict["G"](low_res, self.current_epoch)
         ct_losses, l1_losses = self.ct_loss(high_fake, high_res)
 
         self.loss_batch_dict['L1_Loss'] = sum(l1_losses) / self.params['batch_size']
@@ -216,7 +215,7 @@ class SuperResolution:
 
     def test_gen(self, low_res, high_res):
         # test function for generator
-        high_fake = self.model_dict["G"](low_res,self.current_epoch)
+        high_fake = self.model_dict["G"](low_res, self.current_epoch)
         ct_losses, l1_losses = self.ct_loss(high_fake, high_res)
 
         self.loss_batch_dict_test['L1_Loss'] = sum(l1_losses) / self.params['batch_size']
@@ -265,7 +264,6 @@ class SuperResolution:
         [self.train_hist_dict[loss].append(helper.mft(self.loss_epoch_dict[loss])) for loss in self.losses]
 
 
-
     def train(self):
         # Train following learning rate schedule
         params = self.params
@@ -289,7 +287,6 @@ class SuperResolution:
             if self.current_epoch % params["save_every"] == 0:
                 save_str = self.save_state(f'output/{params["save_root"]}_{self.current_epoch}.json')
                 tqdm.write(save_str)
-
 
             epoch_end_time = time.time()
             per_epoch_ptime = epoch_end_time - epoch_start_time
