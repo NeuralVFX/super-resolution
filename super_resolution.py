@@ -252,10 +252,6 @@ class SuperResolution:
             lr_mult = self.lr_lookup()
             self.opt_dict["G"].param_groups[0]['lr'] = lr_mult * params['lr']
 
-            if self.current_epoch == params["switch_epoch"]:
-                self.model_dict["G"].rnn_switch(False)
-            # self.opt_dict["G"] =
-
             epoch_start_time = time.time()
             num_iter = 0
 
