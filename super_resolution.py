@@ -89,7 +89,7 @@ class SuperResolution:
         self.test_data = copy.deepcopy(self.train_data)
         self.test_data.train = False
 
-        print('Data Loaders Initialized')
+        print(f'Data Loaders Initialized,  Data Len:{self.train_data.__len__()}')
         # Setup models
         self.model_dict['G'] = n.SrResNet(params["gen_filters"], params["zoom_count"])
 
