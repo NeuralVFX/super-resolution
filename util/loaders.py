@@ -85,7 +85,7 @@ class FlipCV(object):
 class ResizeCV(object):
     # resize image
     def __init__(self, output_size):
-        self.output_size = output_size
+        self.output_size = int(output_size)
 
     def __call__(self, sample):
         image = sample['image']
