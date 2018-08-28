@@ -49,7 +49,7 @@ class SrResNet(nn.Module):
         self.first_run = True
         self.switch_epoch = switch_epoch
 
-    def forward(self, x, epoch):
+    def forward(self, x, epoch = 0):
         self.check_rnn_status(epoch)
 
         x = self.res(x)
