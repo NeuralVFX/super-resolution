@@ -33,9 +33,10 @@ parser.add_argument('--ids', type=int, nargs='+', default=[10, 20])
 parser.add_argument('--save_root', nargs='?', default='franc_style', type=str)
 parser.add_argument('--load_state', nargs='?', type=str)
 
-st = SuperResolution(params)
 
 params = vars(parser.parse_args())
+st = SuperResolution(params)
+
 
 # if load_state arg is not used, then train model from scratch
 if __name__ == '__main__':

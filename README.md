@@ -11,6 +11,9 @@ Tested using a subset of [Image-Net](http://files.fast.ai/data/imagenet-sample-t
 Usage instructions found here: [user manual page](USAGE.md).
 
 # Example Results
-## Image-Net
+## Image-Net (32x32 > 256x256)
 #### (1: Low Res Image  — 2: Generated High Res Image — 3: Real High Res Image)
-![](examples/example.png)
+![](examples/example32.png)
+## Image-Net (64x64 > 512x512)
+#### (1: Low Res Image  — 2: Generated High Res Image — 3: Real High Res Image)
+![](examples/example64.png)
