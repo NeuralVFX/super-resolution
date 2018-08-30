@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 ############################################################################
 
 
-def icnr(x, scale=2, init=nn.init.kaiming_normal):
+def icnr(x, scale=2, init=nn.init.kaiming_normal_):
     # initiate pre-pixel shuffle conv layers with ICNR
     new_shape = [int(x.shape[0])/(scale**2)] + list(x.shape[1:])
     single_kernel = torch.zeros(new_shape)
