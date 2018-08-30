@@ -220,9 +220,14 @@ class SuperResolution:
         self.loss_batch_dict_test['C_Loss'] = sum(ct_losses) / self.params['batch_size']
         return l1_losses, ct_losses
 
+    def set_grad(self,grad):
+        for param in self.model_dict["G"].parameters():
+            param.requires_grad = grad
+
     def test_loop(self):
         # Test on validation set
         self.model_dict["G"].eval()
+        self.set_grad(False)
 
         for loss in self.losses:
             self.loss_epoch_dict_test[loss] = []
@@ -241,6 +246,8 @@ class SuperResolution:
     def train_loop(self):
         # Train on train set
         self.model_dict["G"].train()
+        self.set_grad(True)
+
 
         for loss in self.losses:
             self.loss_epoch_dict[loss] = []
