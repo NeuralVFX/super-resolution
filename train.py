@@ -34,8 +34,6 @@ parser.add_argument('--load_state', nargs='?', type=str)
 
 
 params = vars(parser.parse_args())
-st = SuperResolution(params)
-
 
 # if load_state arg is not used, then train model from scratch
 if __name__ == '__main__':
