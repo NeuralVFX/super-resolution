@@ -5,7 +5,7 @@
 
 - Clone this repo:
 ```bash
-https://github.com/NeuralVFX/super-resolution.git
+git clone https://github.com/NeuralVFX/super-resolution.git
 cd super-resolution
 ```
 - Download the dataset (e.g. [Imagenet or Imagenet Subset](http://pjreddie.com/media/files/VOCtrainval_06-Nov-2007.tar)):
