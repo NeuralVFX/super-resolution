@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("cmd", help=argparse.SUPPRESS, nargs="*")
 parser.add_argument('--dataset', nargs='?', default='imagenet', type=str)
-parser.add_argument('--batch_size', nargs='?', default=4, type=int)
+parser.add_argument('--batch_size', nargs='?', default=1, type=int)
 parser.add_argument('--gen_filters', nargs='?', default=128, type=int)
 parser.add_argument('--blur_kernel', nargs='?', default=15, type=int)
 parser.add_argument('--lr_drop_every', nargs='?', default=5, type=int)
