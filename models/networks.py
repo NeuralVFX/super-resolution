@@ -63,7 +63,9 @@ class SrResNet(nn.Module):
         return x
 
     def check_rnn_status(self, epoch):
+        pass
         # check if RNN must be on
+        """
         if self.first_run:
             if epoch > self.switch_epoch:
                 print("Switching RNN Off")
@@ -73,6 +75,7 @@ class SrResNet(nn.Module):
         if self.rnn:
             if epoch == self.switch_epoch:
                 self.rnn_switch(False)
+        """
 
     def rnn_switch(self, rnn_on):
         # Switch which turns off RNN, and copies trained weights into separate trainable layers for fine tuning

@@ -245,6 +245,7 @@ class SuperResolution:
         for loss in self.losses:
             self.loss_epoch_dict[loss] = []
 
+        # train loop
         lr_mult = self.lr_lookup()
         self.opt_dict["G"].param_groups[0]['lr'] = lr_mult * self.params['lr']
         print(f"Sched Sched Iter:{self.current_iter}, Sched Epoch:{self.current_epoch}")
