@@ -29,7 +29,7 @@ parser.add_argument('--workers', nargs='?', default=4, type=int)
 parser.add_argument('--save_every', nargs='?', default=5, type=int)
 parser.add_argument('--save_img_every', nargs='?', default=1, type=int)
 parser.add_argument('--ids', type=int, nargs='+', default=[10, 20])
-parser.add_argument('--save_root', nargs='?', default='franc_style', type=str)
+parser.add_argument('--save_root', nargs='?', default='imagenet_upres', type=str)
 parser.add_argument('--load_state', nargs='?', type=str)
 
 
