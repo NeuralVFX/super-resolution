@@ -65,12 +65,10 @@ Train Dir:
 - `weights`, `test images` and `loss graph`, are all output to this directory: `output/<save_root>_*.*`
 
 - Loss Graph Example: `output/imagenet_upres_loss.jpg`
-<img align="left"src="output/imagenet_upres_loss.jpg">
 
 ![](output/imagenet_upres_loss.jpg)
 
 - Test Image Example (output every loop through dataset): `output/imagenet_upres_val_40.jpg`
-<img align="left"src="output/imagenet_upres_val_40.jpg">
 
 ![](output/imagenet_upres_val_40.jpg)
 
