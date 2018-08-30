@@ -68,7 +68,8 @@ class SuperResolution:
                                                in_res=params["in_res"],
                                                out_res=params["in_res"] * math.pow(2, params["zoom_count"]),
                                                data_perc=params["data_perc"],
-                                               kernel=15)
+                                               test_prec=params["test_perc"],
+                                               kernel=params["blur_kernel"])
 
         self.test_data = copy.deepcopy(self.train_data)
         self.test_data.train = False
