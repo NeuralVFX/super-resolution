@@ -78,3 +78,5 @@ python train.py --dataset imagenet --train_epoch 100  --save_root imagenet_upres
 
 - Use a small subset of the overall training by setting `--data_perc` to any value below one
 
+- This uses RNN styl;e upressing, re-using the same weights for each up-res stage. After "rnn_switch_epoch", these weights are copied and the weights for each layer are made individual
+
