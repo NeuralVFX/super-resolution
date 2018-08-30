@@ -42,11 +42,9 @@ class SuperResolution:
                   'in_res':64,
                   'save_every': 1,
                   'ids': [16, 26],
-                  'grow_count': 3,
-                  'grow_every':5,
                   'rnn_switch_epoch':4,
                   'save_img_every':1,
-                  'drop_start': 30,
+                  'lr_drop_start': 5,
                   'lr_drop_every': 5,
                   'blur_kernel':15,
                   'save_root': 'super_res_imagenet'}
@@ -193,7 +191,7 @@ class SuperResolution:
 
     def lr_lookup(self):
         # Determine proper learning rate multiplier for this iter, cuts in half every "lr_drop_every"
-        div = max(0, ((self.current_epoch - self.params["drop_start"]) // self.params["lr_drop_every"]))
+        div = max(0, ((self.current_epoch - self.params["lr_drop_start"]) // self.params["lr_drop_every"]))
         lr_mult = 1 / math.pow(2, div)
         return lr_mult
 
