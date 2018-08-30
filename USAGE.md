@@ -56,7 +56,7 @@ python train.py --dataset imagenet --train_epoch 100  --save_root imagenet_upres
 
 `data/<data set>/`
 
-Train Dir:
+- Train Dir:
 
 `data/imagenet/`
 
