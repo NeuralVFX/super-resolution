@@ -67,8 +67,8 @@ Train Dir:
 - Loss Graph Example: `output/imagenet_upres_loss.jpg`
 ![](output/imagenet_upres_loss.jpg)
 
-- Test Image Example (output every loop through dataset): `output/imagenet_upres_val_60.jpg`
-![](output/imagenet_upres_val_60.jpg)
+- Test Image Example (output every loop through dataset): `output/imagenet_upres_val_40.jpg`
+![](output/imagenet_upres_val_40.jpg)
 
 ## Other Notes
 
