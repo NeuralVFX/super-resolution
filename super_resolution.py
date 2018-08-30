@@ -13,7 +13,6 @@ from util import loaders as load
 from models import networks as n
 
 plt.switch_backend('agg')
-import pdb
 
 ############################################################################
 # Train
@@ -256,12 +255,7 @@ class SuperResolution:
             high_res = Variable(high_res.cuda())
 
             # TRAIN GENERATOR
-            time_a = time.time()
             l1_losses, content_losses = self.train_gen(low_res, high_res)
-            time_b = time.time()
-            print (time_b-time_a)
-            pdb.set_trace()
-
 
             # append all losses in loss dict
             [self.loss_epoch_dict[loss].append(self.loss_batch_dict[loss].item()) for loss in self.losses]
