@@ -68,6 +68,8 @@ class SrResNet(nn.Module):
             if epoch > self.switch_epoch:
                 print("Switching RNN Off")
                 self.rnn = False
+            self.first_run = False
+        # switch RNN of when we hit switch epoch
         if self.rnn:
             if epoch == self.switch_epoch:
                 self.rnn_switch(False)
