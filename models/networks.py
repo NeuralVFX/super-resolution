@@ -90,7 +90,6 @@ def make_vgg():
     vgg = models.vgg16(pretrained=True)
     children = list(vgg.children())
     children.pop()
-    print ('vgg',len(children[0]))
     vgg = nn.Sequential(*children[0][:16])
     vgg.eval()
     for param in vgg.parameters():
